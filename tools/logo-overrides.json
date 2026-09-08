@@ -1,0 +1,4 @@
+{
+  "_lisez_moi": "Corrections manuelles pour tools/fetch-logos.mjs. Clé = id du club dans data/clubs.json. Valeur = identifiant d'équipe Sportmonks (nombre) ou URL d'image directe (chaîne). Exemple : \"pafos-fc\": 12345",
+  "_exemple_supprimez_moi": 0
+}

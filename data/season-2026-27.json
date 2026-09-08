@@ -1,0 +1,22 @@
+{
+  "_lisez_moi": [
+    "Édition 2026/27 — à compléter par vos soins.",
+    "",
+    "Remplissez \"clubs\" avec les 36 équipes de la phase de ligue. Deux formats possibles,",
+    "mélangeables librement dans la même liste :",
+    "",
+    "  1. Club DÉJÀ présent dans data/clubs.json : mettez simplement son \"id\" ou son \"name\",",
+    "     sous forme de chaîne. Ex : \"fc-astana\", \"Pafos FC\".",
+    "",
+    "  2. Nouveau club : un objet complet avec au minimum name, city, cc, lat, lon.",
+    "     Ex : { \"name\": \"FC Untel\", \"city\": \"Quelque part\", \"cc\": \"POR\",",
+    "            \"lat\": 41.1234, \"lon\": -8.5678 }",
+    "     Les champs country et flag sont déduits de \"cc\" (code UEFA à 3 lettres) s'ils sont absents.",
+    "",
+    "Astuce : `node tools/build-season.mjs 2026-27` génère ce fichier automatiquement à partir",
+    "d'une simple liste de noms dans tools/season-2026-27.txt (résolution via Wikipédia/Wikidata).",
+    "",
+    "Tant que \"clubs\" est vide, l'édition 2026/27 reste grisée sur l'écran d'accueil."
+  ],
+  "clubs": []
+}

@@ -1,0 +1,10 @@
+# Les 36 clubs de la phase de ligue 2026/27 — un par ligne.
+# Le code pays après « | » est facultatif mais fiabilise la résolution.
+# Les lignes vides et celles commençant par # sont ignorées.
+#
+# Puis :  node tools/build-season.mjs 2026-27
+#
+# Exemples (à supprimer et remplacer par la vraie liste) :
+# Pafos FC | CYP
+# Rayo Vallecano | ESP
+# KÍ Klaksvík | FRO

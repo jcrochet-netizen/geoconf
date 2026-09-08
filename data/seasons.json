@@ -1,0 +1,8 @@
+[
+  { "id": "2021-22", "label": "2021/22", "short": "21/22", "note": "Première édition" },
+  { "id": "2022-23", "label": "2022/23", "short": "22/23" },
+  { "id": "2023-24", "label": "2023/24", "short": "23/24" },
+  { "id": "2024-25", "label": "2024/25", "short": "24/25", "note": "Passage à la phase de ligue (36 clubs)" },
+  { "id": "2025-26", "label": "2025/26", "short": "25/26" },
+  { "id": "2026-27", "label": "2026/27", "short": "26/27", "file": "data/season-2026-27.json" }
+]

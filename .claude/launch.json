@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "geoconf", "runtimeExecutable": "node", "runtimeArgs": ["tools/serve.mjs", "8412"], "port": 8412 }
+  ]
+}
