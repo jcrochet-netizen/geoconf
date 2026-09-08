@@ -65,7 +65,8 @@ button{font:inherit;color:inherit}
   .facts span{margin:0 0 0 auto;text-align:right;font-size:11px;min-width:0}}
 
 .setup{margin-top:20px;display:grid;gap:18px}
-.field-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:10px}
+.field-head{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;margin-bottom:10px}
+.field-note{flex:1 1 220px;margin:0;font-size:12.5px;color:var(--dim)}
 .field-head h2{font-family:var(--fd);font-size:13px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);margin:0;font-weight:600}
 .pool-info{font-size:12.5px;color:var(--dim);font-variant-numeric:tabular-nums}
@@ -115,6 +116,10 @@ button{font:inherit;color:inherit}
   letter-spacing:-.025em;line-height:1.1;overflow-wrap:anywhere}
 .club-meta{display:flex;align-items:center;gap:7px;margin:4px 0 0;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
 .club-meta .flag{font-size:14px;line-height:1}
+.club-meta .ctry.is-revealed{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;
+  border-radius:7px;background:rgba(124,108,255,.18);border:1px solid rgba(124,108,255,.42);
+  color:#CFC8FF;font-weight:600;animation:pop .3s cubic-bezier(.2,.8,.3,1.25) both}
+@keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
 .club-meta .seas{display:inline-flex;gap:4px}
 .club-meta .seas b{font-family:var(--fd);font-size:10px;font-weight:600;padding:2px 6px;border-radius:5px;
   background:rgba(255,255,255,.07);color:var(--muted);letter-spacing:.02em}
@@ -177,6 +182,20 @@ button{font:inherit;color:inherit}
 .actionbar.b-good{border-color:rgba(255,194,75,.45);background:rgba(255,194,75,.06)}
 .actionbar.b-meh{border-color:rgba(255,138,75,.45);background:rgba(255,138,75,.06)}
 .actionbar.b-bad,.actionbar.b-awful{border-color:rgba(255,84,112,.45);background:rgba(255,84,112,.06)}
+/* Indice : trois par partie, chacun dévoile le pays du club. */
+.hint-btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;padding:9px 13px 9px 10px;
+  border-radius:11px;border:1px solid rgba(124,108,255,.45);background:rgba(124,108,255,.13);
+  cursor:pointer;font-size:13.5px;font-weight:600;color:#C9C1FF;
+  transition:transform .15s,background .15s,border-color .15s,opacity .2s}
+.hint-btn:hover:not(:disabled){transform:translateY(-2px);background:rgba(124,108,255,.24);
+  border-color:rgba(124,108,255,.75)}
+.hint-btn:disabled{opacity:.42;cursor:not-allowed}
+.hint-ico{width:19px;height:19px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  background:rgba(124,108,255,.38);font-family:var(--fd);font-size:12px;font-weight:700;color:#EDEAFF}
+.hint-btn b{font-family:var(--fd);font-size:12px;font-variant-numeric:tabular-nums;
+  padding:1px 7px;border-radius:99px;background:rgba(0,0,0,.32)}
+.hint-btn.is-spent b{display:none}
+
 .verdict{min-width:0;flex:1}
 .verdict-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .verdict-main b{font-family:var(--fd);font-size:26px;font-weight:700;letter-spacing:-.03em;
@@ -192,8 +211,10 @@ button{font:inherit;color:inherit}
 .verdict-sub strong{color:var(--txt);font-weight:600}
 .verdict-sub em{font-style:normal;color:var(--dim)}
 @media (max-width:520px){
-  .actionbar{flex-wrap:wrap}
-  .actionbar .cta-sm{width:100%;margin-left:0;justify-content:center}
+  .actionbar{flex-wrap:wrap;gap:10px}
+  .actionbar .cta-sm{width:100%;margin-left:0;justify-content:center;order:3}
+  .hint-btn{order:1}
+  .verdict{order:2;flex:1 1 100%}
 }
 
 /* ─────────────── écran final ─────────────── */

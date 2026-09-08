@@ -23,7 +23,6 @@
   <section class="screen is-active" id="scr-home">
     <div class="hero">
       <div class="hero-glow" aria-hidden="true"></div>
-      <p class="kicker"><span class="dot"></span> UEFA Conference League · 2021 → aujourd'hui</p>
       <h1 class="title">Le GeoGuessr<br><em>du football</em></h1>
       <p class="tagline">Les clubs de Conference League, pour les hipsters.</p>
       <p class="lede">On vous donne un club. Vous le placez sur la carte. Chaque kilomètre d'écart vous coûte un point&nbsp;— <strong>le meilleur score est le plus petit</strong>.</p>
@@ -34,6 +33,7 @@
       <div class="field">
         <div class="field-head">
           <h2>Éditions</h2>
+          <p class="field-note">— Sélectionne les éditions à ajouter au jeu.</p>
           <button class="link-btn" id="btn-all-seasons" type="button">Tout mélanger</button>
         </div>
         <div class="chips" id="season-chips"></div>
@@ -89,6 +89,11 @@
     </div>
 
     <div class="actionbar" id="actionbar">
+      <button class="hint-btn" id="btn-hint" type="button">
+        <span class="hint-ico" aria-hidden="true">?</span>
+        <span class="hint-txt">Indice</span>
+        <b id="hint-left">3</b>
+      </button>
       <div class="verdict" id="verdict" hidden>
         <div class="verdict-main">
           <b id="verdict-dist">—</b>
@@ -142,7 +147,6 @@
   </section>
 
   <footer class="foot">
-    <span id="foot-credit">Données&nbsp;: Wikipédia / Wikidata · Logos&nbsp;: Sportmonks</span>
     <a href="#" id="foot-link" target="_blank" rel="noopener">Le jeu</a>
   </footer>
 </div>

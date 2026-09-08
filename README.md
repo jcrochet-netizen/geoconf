@@ -12,10 +12,11 @@ et intégré en `<iframe>` (900 px de large maximum).
 
 ## Ce qu'il y a dedans
 
-- **121 clubs**, 48 pays, de Beer-Sheva à Bodø et de Kópavogur à Almaty.
-- **5 éditions** jouables : 2021/22, 2022/23, 2023/24, 2024/25, 2025/26 — la phase de
-  groupes (32 clubs) puis la phase de ligue (36 clubs). L'édition **2026/27** est
-  prévue mais reste à renseigner (voir plus bas).
+- **143 clubs**, 51 pays, sur 6 200 km d'est en ouest.
+- **6 éditions** jouables : 2021/22 → 2026/27 — la phase de groupes (32 clubs) puis
+  la phase de ligue (36 clubs).
+- **Le pays du club n'est jamais affiché** : ce serait trop facile. Trois **indices**
+  par partie permettent de l'acheter, et une fois dépensés il n'y en a plus.
 - Éditions **cumulables** : cochez celles que vous voulez, ou « Tout mélanger ».
 - **10, 20, 50 ou tous** les clubs par partie. Tirage **sans remise** : un club donné
   ne peut pas retomber dans la même partie.
@@ -23,6 +24,7 @@ et intégré en `<iframe>` (900 px de large maximum).
   déplacement à la souris ou au doigt.
 - Score en kilomètres orthodromiques, verdict par manche, récapitulatif et
   **boutons de partage** (copie, X, WhatsApp, Bluesky, Facebook, partage natif mobile).
+  Le texte partagé indique combien d'indices ont été consommés.
 
 ## Essayer en local
 
@@ -101,9 +103,12 @@ Tant qu'un logo est absent, le jeu affiche un **écusson de repli** généré à
 (monogramme sur fond coloré, dérivé de l'identifiant du club). Le jeu est donc
 parfaitement jouable sans aucun logo.
 
-## Ajouter l'édition 2026/27
+## Ajouter ou corriger une édition
 
-1. Listez les 36 clubs dans `tools/season-2026-27.txt`, un par ligne. Le code pays
+L'édition 2026/27 est déjà intégrée à `data/clubs.json`. Pour une édition suivante
+(ou pour corriger une liste), la mécanique est la même :
+
+1. Listez les clubs dans `tools/season-2027-28.txt`, un par ligne. Le code pays
    après `|` est facultatif mais fiabilise la résolution :
 
    ```
@@ -114,19 +119,25 @@ parfaitement jouable sans aucun logo.
 2. Lancez le résolveur :
 
    ```bash
-   node tools/build-season.mjs 2026-27
+   node tools/build-season.mjs 2027-28
    ```
 
    Il reconnaît les clubs déjà présents dans `data/clubs.json` (référencés par leur
    `id`) et va chercher les nouveaux sur Wikipédia puis Wikidata — coordonnées du
-   stade (`P115` → `P625`), à défaut le siège (`P159`). Les entrées incertaines sont
-   signalées à la fin : **relisez-les**.
+   stade (`P115` → `P625`), à défaut le siège (`P159`). Les appels sont groupés par
+   paquets de 40, sans quoi Wikidata répond des HTTP 429.
 
-3. Vérifiez `data/season-2026-27.json`. L'édition apparaît automatiquement sur
-   l'écran d'accueil dès que la liste n'est plus vide.
+3. **Relisez la sortie.** Le script signale les titres approchés, les villes et pays
+   manquants, et vérifie le sport de l'entité (`P641`) — sans ce garde-fou,
+   « Kauno Žalgiris » redirige vers le club de *basket* de Kaunas et récupère les
+   coordonnées de la Žalgiris Arena. Une redirection Wikipédia peut mener n'importe où.
 
-Vous pouvez aussi remplir `data/season-2026-27.json` à la main — le format est
-documenté en tête du fichier.
+4. Ajoutez l'édition à `data/seasons.json`. Elle apparaît sur l'écran d'accueil dès
+   qu'au moins un club la référence.
+
+Vous pouvez aussi remplir `data/season-<édition>.json` à la main — le format est
+documenté en tête du fichier — ou éditer directement `data/clubs.json`, une ligne
+par club.
 
 ## Origine des données
 
@@ -145,8 +156,8 @@ documenté en tête du fichier.
   sur un écran en portrait, la carte affiche une bande plus haute que large, et
   sans cette marge on verrait le bord du découpage trancher le Sahara.
 
-Les coordonnées des 121 clubs ont été recoupées avec le fond de carte : 111 tombent
-exactement dans le bon pays. Les 10 autres sont des stades littoraux (Beşiktaş sur le
+Les coordonnées ont été recoupées avec le fond de carte : sur les 121 clubs des cinq
+premières éditions, 111 tombent exactement dans le bon pays. Les 10 autres sont des stades littoraux (Beşiktaş sur le
 Bosphore, Djurgården dans l'archipel de Stockholm, Molde sur son fjord, Bodø, KÍ
 Klaksvík…) que le trait de côte au 1:50 000e place 1 à 3 km au large. Les coordonnées
 sont justes, c'est la carte qui n'a pas la finesse — visible seulement au zoom maximal.
@@ -156,7 +167,9 @@ sont justes, c'est la carte qui n'a pas la finesse — visible seulement au zoom
 La bonne réponse est toujours le **domicile historique du club**, pas son stade
 d'exil. Ces clubs affichent une note explicative au moment du verdict :
 
-- **Chakhtar Donetsk** → Donetsk, et **Zorya Louhansk** → Louhansk : en exil depuis 2014.
+- **Chakhtar Donetsk** → Donetsk, et **Zorya Louhansk** → Louhansk. Les quatre clubs
+  ukrainiens (avec le Dynamo Kyiv et le Dnipro-1) sont placés à leur stade **en
+  Ukraine**, jamais à leur lieu d'exil.
 - **Qarabağ** → Bakou : le club vient d'Aghdam, exilé depuis 1993 (les coordonnées
   pointent vers son stade actuel de Bakou).
 - **Anorthosis Famagouste** → Larnaca : réfugié depuis 1974.
@@ -173,14 +186,15 @@ embed.html                 démo d'intégration en iframe
 assets/map.js              moteur de carte : projection, zoom/pan, marqueurs
 assets/app.js              logique de jeu, score, partage
 assets/style.css           thème sombre
-data/clubs.json            121 clubs : nom, ville, pays, coordonnées, éditions
+data/clubs.json            143 clubs : nom, ville, pays, coordonnées, éditions
 data/seasons.json          les six éditions
-data/season-2026-27.json   à compléter
+data/season-2026-27.json   fichier d'appoint (vide : l'édition est dans clubs.json)
 data/europe.json           fond de carte
 data/logos.json            id du club → chemin du logo
 logos/                     images téléchargées via Sportmonks
 tools/fetch-logos.mjs      récupération des logos (clé API locale)
 tools/build-season.mjs     construction d'une édition depuis une liste de noms
+tools/build-map.py         régénération du fond de carte
 tools/serve.mjs            serveur statique pour tester en local
 ```
 

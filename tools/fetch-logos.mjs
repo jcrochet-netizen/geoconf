@@ -35,7 +35,7 @@ if (!TOKEN) {
 
 /* Nom de pays tel que Sportmonks le renvoie, par code UEFA. */
 const SM_COUNTRY = {
-  ARM: 'Armenia', AUT: 'Austria', AZE: 'Azerbaijan', BEL: 'Belgium', BIH: 'Bosnia and Herzegovina',
+  ALB: 'Albania', AND: 'Andorra', ARM: 'Armenia', AUT: 'Austria', AZE: 'Azerbaijan', BEL: 'Belgium', BIH: 'Bosnia and Herzegovina',
   BLR: 'Belarus', BUL: 'Bulgaria', CRO: 'Croatia', CYP: 'Cyprus', CZE: 'Czech Republic',
   DEN: 'Denmark', ENG: 'England', ESP: 'Spain', EST: 'Estonia', FIN: 'Finland', FRA: 'France',
   FRO: 'Faroe Islands', GEO: 'Georgia', GER: 'Germany', GIB: 'Gibraltar', GRE: 'Greece',

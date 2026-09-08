@@ -1,10 +1,52 @@
-# Les 36 clubs de la phase de ligue 2026/27 — un par ligne.
-# Le code pays après « | » est facultatif mais fiabilise la résolution.
-# Les lignes vides et celles commençant par # sont ignorées.
-#
-# Puis :  node tools/build-season.mjs 2026-27
-#
-# Exemples (à supprimer et remplacer par la vraie liste) :
-# Pafos FC | CYP
-# Rayo Vallecano | ESP
-# KÍ Klaksvík | FRO
+# UEFA Conference League 2026/27 — phase de ligue, 36 clubs.
+# Les clubs déjà présents dans data/clubs.json sont écrits avec leur nom exact ;
+# les nouveaux avec leur titre Wikipédia anglophone, pour une résolution fiable.
+# Le nom affiché en français est appliqué ensuite (voir le commit).
+
+# ── Chapeau 1
+Atalanta B.C. | ITA
+S.C. Braga | POR
+AFC Ajax | NED
+SC Freiburg | GER
+AS Monaco FC | FRA
+Copenhagen
+
+# ── Chapeau 2
+FC Midtjylland | DEN
+Red Star Belgrade | SRB
+Gent
+Panathinaikos
+Pafos FC
+Brighton & Hove Albion F.C. | ENG
+
+# ── Chapeau 3
+Lugano
+Getafe CF | ESP
+KuPS Kuopio
+FC Twente | NED
+Lincoln Red Imps
+Borac Banja Luka
+
+# ── Chapeau 4
+Sint-Truidense V.V. | BEL
+SK Brann | NOR
+Heart of Midlothian
+Kairat
+Trabzonspor | TUR
+Universitatea Craiova
+
+# ── Chapeau 5
+Riga FC | LVA
+HNK Hajduk Split | CRO
+FK Jablonec
+FC Nordsjælland
+Aarhus Gymnastikforening | DEN
+Inter Club d'Escaldes | AND
+
+# ── Chapeau 6
+FC Thun | SUI
+CSKA Sofia
+FK Kauno Žalgiris | LTU
+Mjällby AIF | SWE
+FC Iberia 1999 | GEO
+KF Egnatia | ALB

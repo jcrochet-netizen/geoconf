@@ -6,8 +6,10 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var COUNT_OPTIONS = [10, 20, 50, 0];   // 0 = tous
+  var HINTS_PER_GAME = 3;                // indices offerts par partie
 
   var COUNTRY_NAMES = {
+    ALB: ['Albanie', '🇦🇱'], AND: ['Andorre', '🇦🇩'],
     ARM: ['Arménie', '🇦🇲'], AUT: ['Autriche', '🇦🇹'], AZE: ['Azerbaïdjan', '🇦🇿'], BEL: ['Belgique', '🇧🇪'],
     BIH: ['Bosnie-Herzégovine', '🇧🇦'], BLR: ['Biélorussie', '🇧🇾'], BUL: ['Bulgarie', '🇧🇬'], CRO: ['Croatie', '🇭🇷'],
     CYP: ['Chypre', '🇨🇾'], CZE: ['Tchéquie', '🇨🇿'], DEN: ['Danemark', '🇩🇰'], ENG: ['Angleterre', '🏴󠁧󠁢󠁥󠁮󠁧󠁿'],
@@ -48,7 +50,8 @@
   var S = {
     clubs: [], seasons: [], logos: {},
     sel: {}, count: 10,
-    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null
+    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null,
+    hintsLeft: 0, hintUsed: false, hintsSpent: 0
   };
 
   /* ---------- utilitaires ---------- */
@@ -161,19 +164,17 @@
 
   function renderFacts() {
     var n = S.clubs.length;
-    var countries = {}, north = null, south = null, east = null, west = null;
+    var countries = {}, east = null, west = null;
     S.clubs.forEach(function (c) {
       countries[c.cc] = 1;
-      if (!north || c.lat > north.lat) north = c;
-      if (!south || c.lat < south.lat) south = c;
       if (!east || c.lon > east.lon) east = c;
       if (!west || c.lon < west.lon) west = c;
     });
     var span = Math.round(window.geoUtil.haversine(west, east) / 100) * 100;
     $('home-facts').innerHTML = [
       ['⚽', n + ' clubs', 'phases de groupes & de ligue'],
-      ['🌍', Object.keys(countries).length + ' pays', 'de ' + south.city + ' à ' + north.city],
-      ['📐', span.toLocaleString('fr-FR') + ' km', 'entre ' + west.city + ' et ' + east.city]
+      ['🌍', Object.keys(countries).length + ' pays', 'représentés'],
+      ['📐', span.toLocaleString('fr-FR') + ' km', "d'un bout à l'autre du tableau"]
     ].map(function (f) {
       return '<li><i>' + f[0] + '</i><b>' + f[1] + '</b><span>' + f[2] + '</span></li>';
     }).join('');
@@ -193,6 +194,7 @@
     var n = S.count === 0 ? pool.length : Math.min(S.count, pool.length);
     S.deck = pool.slice(0, n);      // tirage sans remise : chaque club n'apparaît qu'une fois
     S.idx = 0; S.results = [];
+    S.hintsLeft = HINTS_PER_GAME; S.hintUsed = false; S.hintsSpent = 0;
     show('scr-play');
     S.map.resize();
     nextRound();
@@ -201,17 +203,11 @@
   function nextRound() {
     if (S.idx >= S.deck.length) return endGame();
     var c = S.deck[S.idx];
-    S.guess = null; S.revealed = false;
+    S.guess = null; S.revealed = false; S.hintUsed = false;
 
     $('crest').innerHTML = crestHTML(c);
     $('club-name').textContent = c.name;
-    var seas = c.seasons.filter(function (s) { return S.sel[s]; })
-      .map(function (id) {
-        var s = S.seasons.filter(function (x) { return x.id === id; })[0];
-        return '<b>' + (s ? s.short : id) + '</b>';
-      }).join('');
-    $('club-meta').innerHTML = '<span class="flag">' + (c.flag || '') + '</span>' +
-      '<span class="ctry">' + c.country + '</span><span class="seas">' + seas + '</span>';
+    renderMeta(c, false);
 
     $('stat-round').innerHTML = (S.idx + 1) + '<i>/' + S.deck.length + '</i>';
     $('progress-bar').style.width = (S.idx / S.deck.length * 100) + '%';
@@ -222,11 +218,43 @@
     $('verdict').hidden = true;
     $('btn-guess').hidden = false; $('btn-guess').disabled = true;
     $('btn-next').hidden = true;
+    syncHint();
     $('map-hint').hidden = false;
     $('map-hint').textContent = S.idx === 0
       ? 'Cliquez sur la carte · molette ou pincement pour zoomer'
       : 'Cliquez sur la carte pour placer votre pronostic';
     $('actionbar').className = 'actionbar';
+  }
+
+  /** Le pays reste caché tant que le joueur n'a pas dépensé un indice. */
+  function renderMeta(c, showCountry) {
+    var seas = c.seasons.filter(function (s) { return S.sel[s]; })
+      .map(function (id) {
+        var s = S.seasons.filter(function (x) { return x.id === id; })[0];
+        return '<b>' + (s ? s.short : id) + '</b>';
+      }).join('');
+    var ctry = showCountry
+      ? '<span class="ctry is-revealed"><span class="flag">' + (c.flag || '') + '</span>' + c.country + '</span>'
+      : '';
+    $('club-meta').innerHTML = ctry + '<span class="seas">' + seas + '</span>';
+  }
+
+  function syncHint() {
+    var b = $('btn-hint'), t = b.querySelector('.hint-txt');
+    $('hint-left').textContent = S.hintsLeft;
+    b.hidden = S.revealed;
+    if (S.hintUsed) { b.disabled = true; t.textContent = 'Pays révélé'; }
+    else if (S.hintsLeft === 0) { b.disabled = true; t.textContent = 'Plus d\'indice'; }
+    else { b.disabled = false; t.textContent = 'Indice'; }
+    b.classList.toggle('is-spent', S.hintsLeft === 0 && !S.hintUsed);
+  }
+
+  function useHint() {
+    if (S.revealed || S.hintUsed || S.hintsLeft <= 0) return;
+    S.hintsLeft--; S.hintUsed = true; S.hintsSpent++;
+    renderMeta(S.deck[S.idx], true);
+    syncHint();
+    postHeight();
   }
 
   function onPick(ll) {
@@ -261,6 +289,8 @@
                                      : '<strong>' + c.city + '</strong>, ' + c.country;
     $('verdict-sub').innerHTML = place + (c.note ? ' · <em>' + c.note + '</em>' : '');
     $('actionbar').className = 'actionbar is-revealed ' + b.cls;
+    renderMeta(c, true);
+    syncHint();
     $('btn-guess').hidden = true;
     $('btn-next').hidden = false;
     $('btn-next').textContent = S.idx + 1 >= S.deck.length ? 'Voir le résultat' : 'Suivant';
@@ -288,7 +318,10 @@
     $('final-best').innerHTML = fmtKm(sorted[0].km) + ' km<small>' + sorted[0].club.name + '</small>';
     $('final-worst').innerHTML = fmtKm(sorted[sorted.length - 1].km) + ' km<small>' +
       sorted[sorted.length - 1].club.name + '</small>';
-    $('final-rank').innerHTML = '<b>' + rank[1] + '</b><span>' + rank[2] + '</span>';
+    $('final-rank').innerHTML = '<b>' + rank[1] + '</b><span>' + rank[2] +
+      (S.hintsSpent ? ' · ' + S.hintsSpent + ' indice' + (S.hintsSpent > 1 ? 's' : '') +
+                      ' sur ' + HINTS_PER_GAME
+                    : ' · aucun indice utilisé') + '</span>';
     $('final-squares').textContent = S.results.map(function (r) { return r.bucket.sq; }).join('');
 
     $('recap-list').innerHTML = S.results.map(function (r) {
@@ -320,6 +353,8 @@
       'Conference League · ' + eds + ' · ' + S.results.length + ' clubs\n' +
       S.results.map(function (r) { return r.bucket.sq; }).join('') + '\n' +
       'Score : ' + fmtKm(total) + ' km (moy. ' + fmtKm(avg) + ' km/club)\n' +
+      (S.hintsSpent ? 'Indices : ' + S.hintsSpent + '/' + HINTS_PER_GAME + '\n'
+                    : 'Sans le moindre indice 😤\n') +
       '« ' + rankFor(avg)[1] + ' »\n';
     var url = shareURL();
 
@@ -457,6 +492,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     $('btn-play').addEventListener('click', startGame);
     $('btn-guess').addEventListener('click', submit);
+    $('btn-hint').addEventListener('click', useHint);
     $('btn-next').addEventListener('click', function () { S.idx++; nextRound(); postHeight(); });
     $('btn-again').addEventListener('click', startGame);
     $('btn-home').addEventListener('click', function () { show('scr-home'); syncHome(); });
