@@ -136,7 +136,14 @@ documenté en tête du fichier.
   Ce sont donc les coordonnées du **stade**, pas du centre-ville.
 - **Fond de carte** : Natural Earth 1:50m via `world-atlas`, découpé sur l'emprise
   du jeu, simplifié (Douglas-Peucker, ~0,5 km) et projeté en Web Mercator.
-  327 Ko bruts, ~114 Ko une fois servis en gzip.
+  449 Ko bruts, ~157 Ko une fois servis en gzip. Le script de génération est
+  `tools/build-map.py` (Python 3, aucune dépendance) : il télécharge le TopoJSON,
+  déroule les anneaux qui franchissent l'antiméridien, découpe au rectangle
+  (Sutherland–Hodgman), simplifie et arrondit.
+
+  L'emprise déborde volontairement de la zone de jeu (lon −33→90, lat 6→80) :
+  sur un écran en portrait, la carte affiche une bande plus haute que large, et
+  sans cette marge on verrait le bord du découpage trancher le Sahara.
 
 Les coordonnées des 121 clubs ont été recoupées avec le fond de carte : 111 tombent
 exactement dans le bon pays. Les 10 autres sont des stades littoraux (Beşiktaş sur le

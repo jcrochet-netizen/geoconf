@@ -75,11 +75,12 @@
   }
 
   function crestHTML(club) {
-    var src = S.logos[club.id] || ('logos/' + club.id + '.png');
+    // On ne demande une image que si data/logos.json la déclare : sans cela, chaque
+    // manche déclencherait un 404 tant que tools/fetch-logos.mjs n'a pas tourné.
+    var src = S.logos[club.id];
     var h = hash(club.id) % 360;
     var fb = '<span class="crest-fb" style="--h:' + h + '">' + initials(club.name) + '</span>';
-    return '<img alt="" src="' + src + '" loading="eager" ' +
-           'onerror="this.remove()">' + fb;
+    return (src ? '<img alt="" src="' + src + '" loading="eager" onerror="this.remove()">' : '') + fb;
   }
 
   /* ---------- écran d'accueil ---------- */
@@ -223,7 +224,7 @@
     $('btn-next').hidden = true;
     $('map-hint').hidden = false;
     $('map-hint').textContent = S.idx === 0
-      ? 'Cliquez pour placer votre pronostic · molette ou pincement pour zoomer'
+      ? 'Cliquez sur la carte · molette ou pincement pour zoomer'
       : 'Cliquez sur la carte pour placer votre pronostic';
     $('actionbar').className = 'actionbar';
   }
