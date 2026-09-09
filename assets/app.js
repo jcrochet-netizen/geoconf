@@ -83,7 +83,20 @@
     var src = S.logos[club.id];
     var h = hash(club.id) % 360;
     var fb = '<span class="crest-fb" style="--h:' + h + '">' + initials(club.name) + '</span>';
-    return (src ? '<img alt="" src="' + src + '" loading="eager" onerror="this.remove()">' : '') + fb;
+    // Si l'image manque à l'appel, on retire aussi la plaque claire pour laisser
+    // le monogramme sur son fond coloré.
+    var img = src
+      ? '<img alt="" src="' + src + '" loading="eager" ' +
+        'onerror="this.closest(\'.crest\').classList.remove(\'has-logo\');this.remove()">'
+      : '';
+    return img + fb;
+  }
+
+  /** Les écussons sombres disparaîtraient sur le fond du jeu : on les pose sur une plaque claire. */
+  function paintCrest(club) {
+    var el = $('crest');
+    el.innerHTML = crestHTML(club);
+    el.classList.toggle('has-logo', !!S.logos[club.id]);
   }
 
   /* ---------- écran d'accueil ---------- */
@@ -205,7 +218,7 @@
     var c = S.deck[S.idx];
     S.guess = null; S.revealed = false; S.hintUsed = false;
 
-    $('crest').innerHTML = crestHTML(c);
+    paintCrest(c);
     $('club-name').textContent = c.name;
     renderMeta(c, false);
 

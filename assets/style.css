@@ -107,7 +107,10 @@ button{font:inherit;color:inherit}
 .hud-club{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
 .crest{position:relative;flex:0 0 auto;width:52px;height:52px;border-radius:13px;overflow:hidden;
   background:var(--surface2);border:1px solid var(--line2);display:grid;place-items:center}
-.crest img{width:100%;height:100%;object-fit:contain;padding:5px;position:relative;z-index:2}
+.crest.has-logo{background:linear-gradient(158deg,#FBFCFE,#E7ECF5);border-color:rgba(255,255,255,.26)}
+/* Sans cela le monogramme dégradé reste sous le logo et mange la plaque claire. */
+.crest.has-logo .crest-fb{display:none}
+.crest img{width:100%;height:100%;object-fit:contain;padding:6px;position:relative;z-index:2}
 .crest-fb{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--fd);font-weight:700;
   font-size:19px;letter-spacing:-.02em;color:#fff;z-index:1;
   background:linear-gradient(145deg,hsl(var(--h) 62% 42%),hsl(calc(var(--h) + 42) 58% 26%))}
