@@ -1,4 +1,15 @@
 {
-  "_lisez_moi": "Corrections manuelles pour tools/fetch-logos.mjs. Clé = id du club dans data/clubs.json. Valeur = identifiant d'équipe Sportmonks (nombre) ou URL d'image directe (chaîne). Exemple : \"pafos-fc\": 12345",
-  "_exemple_supprimez_moi": 0
+  "_lisez_moi": "Corrections manuelles pour tools/fetch-logos.mjs. Clé = id du club dans data/clubs.json. Valeur = identifiant d'équipe Sportmonks (nombre) ou URL d'image directe (chaîne). Ces clubs portent chez Sportmonks un nom que la recherche automatique ne retrouve pas.",
+  "stade-rennais": 598,
+  "etoile-rouge-de-belgrade": 2673,
+  "agf-aarhus": 2905,
+  "kups-kuopio": 4323,
+  "1-fc-koln": 3320,
+  "djurgardens-if": 443,
+  "fk-rfs": 6556,
+  "tsc": 28028,
+  "ki-klaksvik": 5284,
+  "copenhagen": 85,
+  "heart-of-midlothian": 314,
+  "kf-shkendija": 876
 }
