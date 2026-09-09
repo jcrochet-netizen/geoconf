@@ -101,7 +101,7 @@ button{font:inherit;color:inherit}
 .cta-sm{width:auto;flex-direction:row;padding:12px 26px;font-size:15px;flex:0 0 auto}
 /* Le bouton de lancement n'a plus besoin de toute la largeur : il se pose au
    centre de la grille des réglages. */
-#btn-play{width:auto;justify-self:center;padding:12px 30px;border-radius:12px}
+#btn-play{width:min(290px,100%);justify-self:center;padding:12px 30px;border-radius:12px}
 #btn-play .cta-label{font-size:15.5px}
 #btn-play .cta-sub{font-size:11px}
 .warn{margin:0;font-size:13px;color:var(--meh)}
