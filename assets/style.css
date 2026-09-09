@@ -6,6 +6,7 @@
   --line:rgba(255,255,255,.075); --line2:rgba(255,255,255,.14);
   --txt:#E9EEFB; --muted:#8C99BC; --dim:#5E6B8C;
   --accent:#2BE08C; --accent-d:#0FA765; --accent2:#7C6CFF; --hot:#FF5470;
+  --gold:#F2C14E; --gold-hi:#FFE3A3; --gold-lo:#D3B071;
   --land:#1C2846; --land-str:#36486F;
   --ok:#2BE08C; --good:#8CE05A; --meh:#FFC24B; --bad:#FF8A4B; --awful:#FF5470;
   --r:16px; --r-sm:11px;
@@ -47,8 +48,7 @@ button{font:inherit;color:inherit}
 @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(43,224,140,0)}}
 .title{font-family:var(--fd);font-size:clamp(34px,7.2vw,58px);line-height:.98;margin:0 0 12px;
   font-weight:700;letter-spacing:-.03em}
-.title em{font-style:normal;background:linear-gradient(96deg,var(--accent),#7CE0C0 42%,var(--accent2));
-  -webkit-background-clip:text;background-clip:text;color:transparent}
+.title em{font-style:normal;color:var(--accent)}
 .tagline{margin:0 0 14px;font-family:var(--fd);font-size:clamp(15px,2.6vw,18px);font-weight:500;color:#B9C6E6}
 .lede{margin:0;max-width:56ch;color:var(--muted);font-size:14.5px}
 .lede strong{color:var(--txt);font-weight:600}
@@ -83,21 +83,27 @@ button{font:inherit;color:inherit}
 .chip.is-dim{opacity:.34}
 .chip-main{font-family:var(--fd);font-size:15px;font-weight:600;letter-spacing:-.01em}
 .chip-sub{font-size:11px;color:var(--dim)}
-.chip.is-on{background:linear-gradient(150deg,rgba(43,224,140,.20),rgba(124,108,255,.14));
-  border-color:rgba(43,224,140,.65);box-shadow:0 0 0 1px rgba(43,224,140,.24),0 10px 26px -14px rgba(43,224,140,.7)}
-.chip.is-on .chip-sub{color:#9CE9C2}
+.chip.is-on{background:rgba(242,193,78,.15);border-color:rgba(242,193,78,.72);
+  box-shadow:0 0 0 1px rgba(242,193,78,.22),0 10px 26px -16px rgba(242,193,78,.75)}
+.chip.is-on .chip-main{color:var(--gold-hi)}
+.chip.is-on .chip-sub{color:var(--gold-lo)}
 .chip-num{flex:1 1 0;min-width:78px;align-items:center;text-align:center}
 
 .cta{width:100%;display:flex;flex-direction:column;align-items:center;gap:2px;padding:15px 20px;border:0;
   border-radius:14px;cursor:pointer;color:#04140C;font-family:var(--fd);font-weight:700;
-  background:linear-gradient(100deg,var(--accent),#5BE9B0 55%,#8FE0FF);
-  box-shadow:0 14px 34px -14px rgba(43,224,140,.85);transition:transform .16s,filter .16s,box-shadow .16s}
-.cta:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.07);box-shadow:0 18px 40px -14px rgba(43,224,140,.95)}
+  background:var(--accent);
+  box-shadow:0 12px 30px -16px rgba(43,224,140,.8);transition:transform .16s,background .16s,box-shadow .16s}
+.cta:hover:not(:disabled){transform:translateY(-2px);background:#43EDA0;box-shadow:0 16px 36px -16px rgba(43,224,140,.95)}
 .cta:active:not(:disabled){transform:translateY(0)}
 .cta:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
 .cta-label{font-size:17px;letter-spacing:-.01em}
 .cta-sub{font-size:11.5px;font-weight:500;opacity:.72}
 .cta-sm{width:auto;flex-direction:row;padding:12px 26px;font-size:15px;flex:0 0 auto}
+/* Le bouton de lancement n'a plus besoin de toute la largeur : il se pose au
+   centre de la grille des réglages. */
+#btn-play{width:auto;justify-self:center;padding:12px 30px;border-radius:12px}
+#btn-play .cta-label{font-size:15.5px}
+#btn-play .cta-sub{font-size:11px}
 .warn{margin:0;font-size:13px;color:var(--meh)}
 
 /* ─────────────── HUD de jeu ─────────────── */
