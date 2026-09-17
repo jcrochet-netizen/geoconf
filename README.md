@@ -35,6 +35,22 @@ node tools/serve.mjs
 Puis ouvrez <http://localhost:8412>. Le jeu charge ses données en `fetch`, il lui faut
 donc un vrai serveur HTTP — ouvrir `index.html` en `file://` ne marchera pas.
 
+### Auditer la géographie
+
+```bash
+node tools/check-clubs.mjs
+```
+
+Teste l'**appartenance réelle de chaque club au polygone de son pays**, contre
+les frontières Natural Earth. C'est bien plus sûr que la distance au centre du
+pays intégrée à la construction : le CS Sfaxien, pointé au Caire, n'était qu'à
+2 100 km du centre de la Tunisie, sous le seuil de 2 500 km, et passait donc
+inaperçu.
+
+Un club signalé « hors de toute terre » est le plus souvent un stade côtier que
+le trait de côte simplifié rejette d'un kilomètre — à distinguer d'un club
+franchement dans le mauvais pays, que le script sépare clairement.
+
 ## Mise en ligne (GitHub Pages)
 
 1. Poussez le dépôt sur GitHub.
