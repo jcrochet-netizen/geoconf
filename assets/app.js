@@ -50,7 +50,7 @@
   var S = {
     clubs: [], seasons: [], logos: {},
     sel: {}, count: 10,
-    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null,
+    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null, parentURL: null,
     hintsLeft: 0, hintUsed: false, hintsSpent: 0
   };
 
@@ -348,10 +348,25 @@
     show('scr-end');
   }
 
+  /** Une URL http(s) et rien d'autre : elle finira dans un href et dans un texte
+      de partage, pas question d'y laisser passer un javascript:. */
+  function httpURL(u) {
+    if (!u || typeof u !== 'string') return null;   // sinon new URL(null,…) donne « /null »
+    try { var x = new URL(u, location.href);
+      return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : null;
+    } catch (e) { return null; }
+  }
+
+  /** Le partage doit pointer vers la page qui héberge l'iframe, jamais vers
+      github.io. Par ordre de fiabilité : la consigne explicite, l'URL que la
+      page hôte nous envoie, à défaut le référent (souvent réduit à l'origine),
+      et seulement en dernier recours notre propre adresse. */
   function shareURL() {
     var q = new URLSearchParams(location.search);
-    if (q.get('share')) return q.get('share');
-    return location.origin + location.pathname;
+    return httpURL(q.get('share'))
+        || S.parentURL
+        || (window.parent !== window ? httpURL(document.referrer) : null)
+        || (location.origin + location.pathname);
   }
 
   function buildShare(total, avg) {
@@ -502,6 +517,16 @@
   }
 
   /* ---------- branchements ---------- */
+  // La page hôte peut nous dire son adresse ; c'est la source la plus sûre.
+  window.addEventListener('message', function (e) {
+    if (!e.data || e.data.type !== 'geoconf:parent') return;
+    var u = httpURL(e.data.url);
+    if (!u) return;
+    S.parentURL = u;
+    var link = $('foot-link');
+    if (link) link.href = u;
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     $('btn-play').addEventListener('click', startGame);
     $('btn-guess').addEventListener('click', submit);

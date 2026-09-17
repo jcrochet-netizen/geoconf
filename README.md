@@ -47,17 +47,25 @@ donc un vrai serveur HTTP — ouvrir `index.html` en `file://` ne marchera pas.
 ```html
 <div style="max-width:900px;margin:0 auto">
   <iframe id="geoconf"
-          src="https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/"
-          title="GeoConf — le GeoGuessr du football"
-          style="width:100%;height:900px;border:0;border-radius:18px"
-          loading="lazy" allow="clipboard-write; web-share"></iframe>
+    src="https://jcrochet-netizen.github.io/geoconf/"
+    title="Le GeoGuessr du football"
+    style="width:100%;height:900px;border:0;border-radius:18px;display:block"
+    loading="lazy" allow="clipboard-write; web-share"></iframe>
 </div>
 <script>
+(function () {
+  var f = document.getElementById('geoconf');
+  // On annonce au jeu l'adresse de cette page : ses boutons de partage doivent
+  // renvoyer ici, pas vers github.io.
+  function annoncer() {
+    try { f.contentWindow.postMessage({ type: 'geoconf:parent', url: location.href }, '*'); } catch (e) {}
+  }
+  f.addEventListener('load', annoncer); annoncer();
   addEventListener('message', function (e) {
-    var f = document.getElementById('geoconf');
-    if (e.source !== f.contentWindow || !e.data || e.data.type !== 'geoconf:height') return;
-    f.style.height = Math.max(600, e.data.height + 8) + 'px';
+    if (e.source !== f.contentWindow || !e.data) return;
+    if (e.data.type === 'geoconf:height') f.style.height = Math.max(600, e.data.height + 8) + 'px';
   });
+})();
 </script>
 ```
 
@@ -71,7 +79,7 @@ Voir [`embed.html`](embed.html) pour une démo complète.
 |---|---|---|
 | `s` | Éditions présélectionnées (séparées par des virgules) | `?s=2024-25,2025-26` |
 | `n` | Nombre de clubs : `10`, `20`, `50` ou `0` (tous) | `?n=20` |
-| `share` | URL à utiliser dans le texte de partage — mettez-y l'adresse de **votre** page plutôt que celle de l'iframe | `?share=https://exemple.fr/jeu` |
+| `share` | Force l'URL du texte de partage (facultatif : le jeu détecte la page hôte) | `?share=https://exemple.fr/jeu` |
 
 ## Les logos des clubs (Sportmonks)
 
