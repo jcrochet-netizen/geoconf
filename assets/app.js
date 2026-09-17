@@ -50,7 +50,7 @@
   var S = {
     clubs: [], seasons: [], logos: {},
     sel: {}, count: 10,
-    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null, parentURL: null,
+    deck: [], idx: 0, results: [], guess: null, revealed: false, map: null, parentURL: null, parentOrigin: null,
     hintsLeft: 0, hintUsed: false, hintsSpent: 0
   };
 
@@ -432,7 +432,8 @@
     var h = Math.ceil(app.getBoundingClientRect().height);
     if (!h || Math.abs(h - lastH) < 6) return;
     lastH = h;
-    try { window.parent.postMessage({ type: 'geoconf:height', height: h }, '*'); } catch (e) {}
+    // On cible l'origine de la page hôte dès qu'on la connaît.
+    try { window.parent.postMessage({ type: 'geoconf:height', height: h }, S.parentOrigin || '*'); } catch (e) {}
   }
   function watchHeight() {
     if (window.parent === window || !window.ResizeObserver) return;
@@ -519,10 +520,14 @@
   /* ---------- branchements ---------- */
   // La page hôte peut nous dire son adresse ; c'est la source la plus sûre.
   window.addEventListener('message', function (e) {
+    // Seul le parent direct est écouté : une autre fenêtre ne peut pas se
+    // faire passer pour la page hôte.
+    if (e.source !== window.parent) return;
     if (!e.data || e.data.type !== 'geoconf:parent') return;
     var u = httpURL(e.data.url);
     if (!u) return;
     S.parentURL = u;
+    S.parentOrigin = e.origin;
     var link = $('foot-link');
     if (link) link.href = u;
   });
