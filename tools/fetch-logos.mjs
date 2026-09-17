@@ -132,11 +132,22 @@ function score(club, cand) {
   for (const ours of [club.name, club.wiki]) {
     const aName = norm(ours), aCore = core(ours);
     let s = 0;
+    // Un préfixe ne vaut que s'il s'arrête sur une frontière de mot : « Braga »
+    // dans « Sporting Braga » désigne le même club, dans « Bragança » non.
+    const prefixeNet = (court, long) =>
+      long.startsWith(court) && (long.length === court.length || long[court.length] === ' ');
+    const motEntier = (petit, grand) => {
+      const i = grand.indexOf(petit);
+      if (i < 0) return false;
+      return (i === 0 || grand[i - 1] === ' ') &&
+             (i + petit.length === grand.length || grand[i + petit.length] === ' ');
+    };
     if (aName === bName) s = 100;
     else if (aCore && aCore === bCore) s = 96;
-    else if (bName.startsWith(aName) || aName.startsWith(bName)) s = 82;
-    else if (bCore && aCore && (bCore.startsWith(aCore) || aCore.startsWith(bCore))) s = 78;
-    else if (bName.includes(aName) || aName.includes(bName)) s = 66;
+    else if (prefixeNet(aName, bName) || prefixeNet(bName, aName)) s = 82;
+    else if (bCore && aCore && (prefixeNet(aCore, bCore) || prefixeNet(bCore, aCore))) s = 78;
+    else if (motEntier(aName, bName) || motEntier(bName, aName)) s = 76;
+    else if (bName.includes(aName) || aName.includes(bName)) s = 60;
     else {
       // « Stade Rennais » et « Stade Bordelais » partagent « stade » : sans filtre
       // sur les mots passe-partout, on colle le logo de Bordeaux sur Rennes.
