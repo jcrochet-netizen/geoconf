@@ -50,7 +50,10 @@ donc un vrai serveur HTTP — ouvrir `index.html` en `file://` ne marchera pas.
     src="https://jcrochet-netizen.github.io/geoconf/"
     title="Le GeoGuessr du football"
     style="width:100%;height:900px;border:0;border-radius:18px;display:block"
-    loading="lazy" allow="clipboard-write; web-share"></iframe>
+    loading="lazy"
+    allow="clipboard-write; web-share"
+    referrerpolicy="strict-origin-when-cross-origin"
+    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
 </div>
 <script>
 (function () {
